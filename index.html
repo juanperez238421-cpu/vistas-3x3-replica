@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Vistas 3x3 - Biblioteca</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.161.0/build/three.module.js"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <main class="app-shell">
+      <aside class="library-panel panel">
+        <header class="panel-head library-head">
+          <div>
+            <p class="kicker">Libreria</p>
+            <h2>Figuras</h2>
+          </div>
+        </header>
+
+        <section class="current-piece-card sidebar-card">
+          <p class="card-kicker">Pieza activa</p>
+          <h3 id="sidebar-piece-code">B01</h3>
+          <p id="sidebar-piece-caption" class="card-copy">Escalon frontal</p>
+        </section>
+
+        <nav class="sidebar-tabs" aria-label="Secciones">
+          <button class="tool-button is-active" data-sidebar-tab="figures" type="button">
+            Figuras
+          </button>
+          <button class="tool-button" data-sidebar-tab="guide" type="button">
+            Gu&iacute;a
+          </button>
+          <button class="tool-button" data-sidebar-tab="theory" type="button">
+            Teor&iacute;a
+          </button>
+          <button class="tool-button" data-sidebar-tab="quiz" type="button">
+            Selecci&oacute;n m&uacute;ltiple
+          </button>
+        </nav>
+
+        <div class="sidebar-content">
+          <section
+            id="sidebar-figures"
+            class="sidebar-pane is-active"
+            data-sidebar-panel="figures"
+          >
+            <section class="sidebar-card">
+              <p class="card-kicker">Nivel</p>
+              <div class="difficulty-tabs">
+                <button class="tool-button is-active" data-difficulty="basico" type="button">
+                  Basico
+                </button>
+                <button class="tool-button" data-difficulty="intermedio" type="button">
+                  Intermedio
+                </button>
+                <button class="tool-button" data-difficulty="avanzado" type="button">
+                  Avanzado
+                </button>
+              </div>
+            </section>
+
+            <div id="piece-library" class="piece-library"></div>
+          </section>
+
+          <section id="sidebar-guide" class="sidebar-pane" data-sidebar-panel="guide">
+            <div id="guide-cards" class="content-stack"></div>
+          </section>
+
+          <section id="sidebar-theory" class="sidebar-pane" data-sidebar-panel="theory">
+            <div id="theory-cards" class="content-stack"></div>
+          </section>
+
+          <section id="sidebar-quiz" class="sidebar-pane" data-sidebar-panel="quiz">
+            <div id="quiz-panel" class="quiz-panel"></div>
+          </section>
+        </div>
+      </aside>
+
+      <section class="viewer-panel panel">
+        <header class="panel-head viewer-head">
+          <div>
+            <p class="kicker">Figura</p>
+            <h1>Pieza <span id="piece-label">B01</span></h1>
+            <p id="piece-meta" class="piece-meta">Basico - Escalon frontal - Figura 1 de 5</p>
+          </div>
+
+          <div class="nav-group">
+            <button id="prev-piece" class="tool-button compact-button" type="button" aria-label="Anterior">
+              <span>&larr;</span>
+            </button>
+            <button id="next-piece" class="tool-button compact-button" type="button" aria-label="Siguiente">
+              <span>&rarr;</span>
+            </button>
+          </div>
+        </header>
+
+        <div class="viewer-stage-shell">
+          <div id="three-stage" class="viewer-stage" aria-label="Visor 3D">
+            <div id="viewer-render-layer" class="viewer-render-layer"></div>
+
+            <div class="viewer-overlay viewer-overlay-top">
+              <button id="viewer-status-card" class="viewer-status viewer-status-button" type="button">
+                <span class="viewer-status-label">Vista</span>
+                <strong id="current-view-label">Isometrica</strong>
+              </button>
+            </div>
+
+            <div class="viewcube-shell" aria-label="Cubo de orientacion">
+              <canvas id="viewcube-canvas" class="viewcube-canvas"></canvas>
+            </div>
+
+            <div
+              id="viewer-context-menu"
+              class="floating-panel floating-tools-panel"
+              aria-label="Panel contextual de herramientas"
+              hidden
+            >
+              <div class="floating-panel-head">
+                <div>
+                  <p class="card-kicker">Herramientas</p>
+                  <h4>Vista y paleta</h4>
+                </div>
+                <button
+                  id="close-tools-panel"
+                  class="floating-close"
+                  type="button"
+                  aria-label="Cerrar herramientas"
+                >
+                  &times;
+                </button>
+              </div>
+
+              <section class="viewer-menu-section">
+                <p class="card-kicker">Vistas</p>
+                <div class="viewer-preset-group">
+                  <button class="viewer-control preset-button is-active" data-view="isometric" type="button">
+                    Iso
+                  </button>
+                  <button class="viewer-control preset-button" data-view="front" type="button">
+                    Alzado
+                  </button>
+                  <button class="viewer-control preset-button" data-view="top" type="button">
+                    Planta
+                  </button>
+                  <button class="viewer-control preset-button" data-view="right" type="button">
+                    Lateral der.
+                  </button>
+                  <button class="viewer-control preset-button" data-view="left" type="button">
+                    Lateral izq.
+                  </button>
+                </div>
+                <button id="reset-view-3d" class="viewer-control viewer-inline-action" type="button">
+                  Reencuadrar
+                </button>
+              </section>
+
+              <section class="viewer-menu-section">
+                <p class="card-kicker">Ayudas</p>
+                <div class="viewer-toggle-group">
+                  <button id="toggle-grid-3d" class="viewer-control is-active" type="button">
+                    Grid
+                  </button>
+                  <button id="toggle-axes-3d" class="viewer-control" type="button">
+                    Ejes
+                  </button>
+                </div>
+              </section>
+
+              <section class="viewer-menu-section palette-card">
+                <p class="card-kicker">Paleta global</p>
+                <div class="palette-grid">
+                  <label class="color-control">
+                    <span>Figura</span>
+                    <input id="color-figure" type="color" value="#c7cdd3" />
+                  </label>
+                  <label class="color-control">
+                    <span>Grid</span>
+                    <input id="color-grid" type="color" value="#cbd3dc" />
+                  </label>
+                  <label class="color-control">
+                    <span>Fondo</span>
+                    <input id="color-background" type="color" value="#fdfeff" />
+                  </label>
+                  <label class="color-control">
+                    <span>Acento</span>
+                    <input id="color-accent" type="color" value="#1a2735" />
+                  </label>
+                </div>
+              </section>
+            </div>
+
+            <aside
+              id="face-editor-panel"
+              class="floating-panel floating-face-panel"
+              aria-label="Editor de caras"
+              hidden
+            >
+              <div class="floating-panel-head">
+                <div>
+                  <p class="card-kicker">Editor de cara</p>
+                  <h4 id="face-editor-title">Cara F01</h4>
+                </div>
+                <button
+                  id="close-face-editor"
+                  class="floating-close"
+                  type="button"
+                  aria-label="Cerrar editor de cara"
+                >
+                  &times;
+                </button>
+              </div>
+
+              <p id="face-editor-meta" class="card-copy">Selecciona una cara para editarla.</p>
+
+              <div class="face-current-row">
+                <span class="face-current-label">Color actual</span>
+                <span id="face-current-color-chip" class="face-color-chip" aria-hidden="true"></span>
+                <span id="face-current-color-text" class="face-current-color-text">#f2f2f2</span>
+              </div>
+
+              <p id="face-selection-status" class="face-selection-status">
+                Sin caras seleccionadas
+              </p>
+
+              <div class="face-paint-grid">
+                <label class="color-control">
+                  <span>Nuevo color</span>
+                  <input id="color-face-paint" type="color" value="#b87333" />
+                </label>
+              </div>
+
+              <p class="context-help">
+                Click izquierdo selecciona. <strong>Shift + click</strong> suma o quita caras.
+              </p>
+
+              <div class="face-paint-actions">
+                <button id="apply-face-paint" class="viewer-control" type="button">
+                  Aplicar color
+                </button>
+                <button id="reset-face-paint" class="viewer-control" type="button">
+                  Reset caras
+                </button>
+                <button id="clear-face-selection" class="viewer-control" type="button">
+                  Deseleccionar
+                </button>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <section class="board-panel panel">
+        <header class="panel-head board-head">
+          <div>
+            <p class="kicker">Panel de vistas</p>
+            <h2>Trazo</h2>
+          </div>
+
+          <div class="tool-row">
+            <button id="tool-line" class="tool-button is-active" type="button">
+              Recta
+            </button>
+            <button id="toggle-dashed" class="tool-button" type="button">
+              Discontinua
+            </button>
+            <button id="tool-erase" class="tool-button" type="button">
+              Borrar
+            </button>
+            <button id="toggle-profile" class="tool-button" type="button">
+              Perfil
+            </button>
+            <button id="clear-board" class="tool-button" type="button">
+              Limpiar
+            </button>
+            <button id="save-image" class="tool-button" type="button">
+              PNG
+            </button>
+            <button id="save-reference-image" class="tool-button" type="button">
+              PNG referencia
+            </button>
+          </div>
+
+          <div class="solution-controls" aria-label="Ayudas de solucion">
+            <label class="trace-check trace-check-primary">
+              <input id="toggle-solution" type="checkbox" />
+              <span>Mostrar soluci&oacute;n</span>
+            </label>
+
+            <div class="trace-check-group">
+              <label class="trace-check">
+                <input id="toggle-solution-lateral" type="checkbox" checked />
+                <span>Lateral</span>
+              </label>
+              <label class="trace-check">
+                <input id="toggle-solution-alzado" type="checkbox" checked />
+                <span>Alzado</span>
+              </label>
+              <label class="trace-check">
+                <input id="toggle-solution-planta" type="checkbox" checked />
+                <span>Planta</span>
+              </label>
+            </div>
+
+            <div class="solution-legend" aria-label="Leyenda de proyecciones">
+              <span class="solution-legend-item">
+                <span class="solution-swatch solution-swatch-lateral" aria-hidden="true"></span>
+                Lateral
+              </span>
+              <span class="solution-legend-item">
+                <span class="solution-swatch solution-swatch-alzado" aria-hidden="true"></span>
+                Alzado
+              </span>
+              <span class="solution-legend-item">
+                <span class="solution-swatch solution-swatch-planta" aria-hidden="true"></span>
+                Planta
+              </span>
+            </div>
+
+            <button id="save-reference-image-inline" class="tool-button" type="button">
+              Descargar referencia
+            </button>
+          </div>
+        </header>
+
+        <div id="paper-shell" class="paper-shell">
+          <div class="paper-stack">
+            <canvas
+              id="paper-canvas"
+              class="paper-canvas"
+              aria-label="Panel de vistas"
+            ></canvas>
+            <canvas
+              id="solution-canvas"
+              class="paper-canvas paper-solution-canvas"
+              aria-hidden="true"
+            ></canvas>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
