@@ -1,0 +1,12 @@
+name: Inventor Render Temp Runner 20260826
+
+on:
+  push:
+    branches:
+      - render-inventor-2d3d-temp-20260826
+
+jobs:
+  diagnostic:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo 'Inventor render runner available'
