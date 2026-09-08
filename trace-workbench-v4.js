@@ -92,8 +92,8 @@ function computePaperLayout(width, height) {
 function drawProjectionHeader(ctx, rect, label, badge) {
   const fontSize = clamp(rect.size * 0.043, 8, 11);
   const bandHeight = fontSize + 6;
-  /* 22–24 px covers the inherited app.js label without reaching the adjacent grid. */
-  const legacyMaskHeight = clamp(rect.size * 0.08, 22, 24);
+  /* Covers the full inherited app.js label, including its scaled font in study mode. */
+  const legacyMaskHeight = clamp(rect.size * 0.11, 25, 38);
   const maskTop = Math.max(0, rect.y - legacyMaskHeight);
   const labelY = Math.max(maskTop + 2, rect.y - bandHeight - 3);
 
@@ -101,8 +101,9 @@ function drawProjectionHeader(ctx, rect, label, badge) {
 
   /*
    * app.js still paints its historic projection label on the drawing canvas.
-   * V4 keeps that canvas untouched for compatibility, then masks that label
-   * zone on this overlay before drawing a single technical header.
+   * V4 deliberately leaves that legacy canvas API intact. This opaque strip
+   * removes the complete historic label; drawSeniorGrid() runs afterwards so
+   * any grid pixels touched by the mask are restored on this overlay.
    */
   ctx.fillStyle = "#ffffff";
   ctx.fillRect(rect.x - 4, maskTop, rect.size + 8, rect.y - maskTop + 1);
@@ -231,14 +232,16 @@ function setupSeniorGrid() {
     const bottomProjection = swapped ? layout.bottomRight : layout.bottomLeft;
     const reference = swapped ? layout.bottomLeft : layout.bottomRight;
 
-    drawSeniorGrid(ctx, layout.topLeft);
-    drawSeniorGrid(ctx, layout.topRight);
-    drawSeniorGrid(ctx, bottomProjection);
-
+    /* Mask all inherited labels and paint the single V4 header system first. */
     drawProjectionHeader(ctx, layout.topLeft, "LATERAL", "3×3");
     drawProjectionHeader(ctx, layout.topRight, "ALZADO", "3×3");
     drawProjectionHeader(ctx, bottomProjection, "PLANTA", "3×3");
     drawProjectionHeader(ctx, reference, "REFERENCIA", "REF");
+
+    /* Then restore/draw every technical grid pixel on top of the masks. */
+    drawSeniorGrid(ctx, layout.topLeft);
+    drawSeniorGrid(ctx, layout.topRight);
+    drawSeniorGrid(ctx, bottomProjection);
 
     overlay.dataset.renderWidth = String(width);
     overlay.dataset.renderHeight = String(height);
