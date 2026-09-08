@@ -12,7 +12,7 @@ const ZOOM_LIMITS = {
 
 const PRESET_VIEWS = {
   isometric: {
-    label: "Isometrica",
+    label: "Isométrica",
     direction: CAMERA_DIRECTION.clone(),
     up: new THREE.Vector3(0, 1, 0),
     padding: { x: 1.12, y: 1.14 },
@@ -653,6 +653,7 @@ let viewCubeMesh;
 let viewerEnvironmentMap;
 let layoutFrame = 0;
 let viewerFrame = 0;
+let viewerDirty = true;
 
 function getActivePiece() {
   return PIECES[state.currentPieceIndex];
@@ -689,7 +690,7 @@ function syncActivePieceFigureColor(piece = getActivePiece()) {
 }
 
 function difficultyLabel(value) {
-  if (value === "basico") return "Basico";
+  if (value === "basico") return "Básico";
   if (value === "intermedio") return "Intermedio";
   return "Avanzado";
 }
@@ -1573,8 +1574,24 @@ function ensurePieceSolution(piece, sourceGeometry, force = false) {
   return entry;
 }
 
+function waitForIdleWork() {
+  return new Promise((resolve) => {
+    if ("requestIdleCallback" in window) {
+      window.requestIdleCallback(() => resolve(), { timeout: 700 });
+      return;
+    }
+    window.setTimeout(resolve, 32);
+  });
+}
+
 async function preloadAllSolutions() {
+  if (navigator.connection?.saveData) {
+    return;
+  }
+
   for (const piece of PIECES) {
+    await waitForIdleWork();
+
     if (solutionCache.has(piece.id)) {
       continue;
     }
@@ -3103,6 +3120,7 @@ function applyViewerColors(options = {}) {
 
   refreshViewerUi();
   renderSolutionOverlay();
+  invalidateViewer();
 }
 
 function renderThree() {
@@ -3385,6 +3403,7 @@ function handleViewerPointerMove(event) {
 
   const intersection = pickPieceFace(event);
   setHighlightFromIntersection(hoverFaceMesh, intersection);
+  invalidateViewer();
 }
 
 function handleViewerPointerUp(event) {
@@ -3426,12 +3445,14 @@ function handleViewerPointerUp(event) {
   }
   state.viewer.pointerDown = null;
   state.viewer.dragDistance = 0;
+  invalidateViewer();
 }
 
 function handleViewerPointerLeave() {
   clearHighlight(hoverFaceMesh);
   state.viewer.pointerDown = null;
   state.viewer.dragDistance = 0;
+  invalidateViewer();
 }
 
 function handleControlsChange() {
@@ -3610,10 +3631,23 @@ function stepVisiblePiece(offset) {
   void setPiece(findPieceIndex(nextPiece.id));
 }
 
+function invalidateViewer() {
+  viewerDirty = true;
+}
+
 function animateViewer() {
   viewerFrame = window.requestAnimationFrame(animateViewer);
-  controls?.update();
+  if (document.hidden) {
+    return;
+  }
+
+  const controlsChanged = controls?.update() ?? false;
+  if (!viewerDirty && !controlsChanged) {
+    return;
+  }
+
   renderThree();
+  viewerDirty = false;
 }
 
 function initThree() {
@@ -3625,7 +3659,8 @@ function initThree() {
     alpha: false,
     preserveDrawingBuffer: true,
   });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  const pixelRatioCap = window.matchMedia("(max-width: 900px)").matches ? 1.5 : 2;
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, pixelRatioCap));
   renderer.setClearColor(state.viewer.colors.background, 1);
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.06;
@@ -3883,6 +3918,13 @@ function bindEvents() {
   window.addEventListener("keydown", (event) => {
     if (event.key === "Escape" && state.viewer.menuOpen) {
       closeViewerContextMenu();
+    }
+  });
+
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden) {
+      invalidateViewer();
+      requestLayoutResize();
     }
   });
 

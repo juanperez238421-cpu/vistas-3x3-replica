@@ -3,8 +3,12 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Biblioteca interactiva de figuras 3x3 para practicar alzado, planta y vistas laterales del sistema diédrico." />
+    <meta name="theme-color" content="#ffffff" />
     <title>Vistas 3x3 - Biblioteca</title>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
     <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./ui-enhancements.css" />
     <script type="importmap">
       {
         "imports": {
@@ -14,11 +18,12 @@
     </script>
   </head>
   <body>
-    <main class="app-shell">
+    <a class="skip-link" href="#three-stage">Saltar al visor 3D</a>
+    <main class="app-shell" id="main-content">
       <aside class="library-panel panel">
         <header class="panel-head library-head">
           <div>
-            <p class="kicker">Libreria</p>
+            <p class="kicker">Librería</p>
             <h2>Figuras</h2>
           </div>
         </header>
@@ -54,7 +59,7 @@
               <p class="card-kicker">Nivel</p>
               <div class="difficulty-tabs">
                 <button class="tool-button is-active" data-difficulty="basico" type="button">
-                  Basico
+                  Básico
                 </button>
                 <button class="tool-button" data-difficulty="intermedio" type="button">
                   Intermedio
@@ -107,7 +112,7 @@
             <div class="viewer-overlay viewer-overlay-top">
               <button id="viewer-status-card" class="viewer-status viewer-status-button" type="button">
                 <span class="viewer-status-label">Vista</span>
-                <strong id="current-view-label">Isometrica</strong>
+                <strong id="current-view-label">Isométrica</strong>
               </button>
             </div>
 
@@ -346,5 +351,6 @@
     </main>
 
     <script type="module" src="./app.js"></script>
+    <script type="module" src="./ui-enhancements.js"></script>
   </body>
 </html>
