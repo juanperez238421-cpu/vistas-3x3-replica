@@ -155,7 +155,8 @@ button {
 .tool-row .tool-button {
   min-width: 0;
   padding-inline: 10px;
-  overflow-wrap: anywhere;
+  overflow-wrap: normal;
+  word-break: normal;
 }
 
 .solution-controls > * {
@@ -196,6 +197,11 @@ button {
     gap: 8px;
   }
 
+  .tool-row .tool-button {
+    padding-inline: 6px;
+    font-size: 11px;
+  }
+
   .board-head {
     gap: 12px;
   }
@@ -228,6 +234,11 @@ button {
   .tool-row {
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 7px;
+  }
+
+  .tool-row .tool-button {
+    padding-inline: 5px;
+    font-size: 11px;
   }
 
   .solution-controls {
@@ -329,8 +340,8 @@ button {
 
   .tool-row .tool-button {
     min-height: 40px;
-    padding-inline: 6px;
-    font-size: 11px;
+    padding-inline: 5px;
+    font-size: 10.5px;
   }
 
   .solution-controls {
@@ -365,7 +376,7 @@ button {
   }
 
   #save-reference-image-inline {
-    min-height: 38px;
+    min-height: 40px;
   }
 }
 
