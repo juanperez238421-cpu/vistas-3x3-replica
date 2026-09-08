@@ -1,0 +1,566 @@
+/*
+ * Vistas 3x3 · Senior trace workbench
+ * Compact in normal mode, expansive in workbench mode.
+ * Preserves the monochrome CAD language and all original drawing behavior.
+ */
+
+.trace-title-block {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.trace-board-subtitle {
+  margin: 0;
+  max-width: 48ch;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+/* Two compact tool families share one row in normal desktop/tablet mode. */
+.trace-toolbar {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.trace-toolbar-group {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+  padding: 6px;
+  border: 1px solid #d0d0d0;
+  background: #fafafa;
+}
+
+.trace-group-label {
+  margin: 0;
+  padding-inline: 1px;
+  color: #666666;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.tool-row.trace-tool-grid {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 5px;
+}
+
+.trace-tool-grid .tool-button {
+  width: 100%;
+  min-width: 0;
+  min-height: 40px;
+  height: 40px;
+  padding: 4px 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  overflow: hidden;
+  white-space: normal;
+  text-align: center;
+  line-height: 1.08;
+}
+
+.trace-tool-label {
+  min-width: 0;
+  max-width: 100%;
+  font-size: 10px;
+  line-height: 1.08;
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: none;
+}
+
+.trace-tool-mark {
+  position: relative;
+  flex: 0 0 auto;
+  width: 16px;
+  height: 11px;
+  display: inline-block;
+}
+
+.trace-tool-mark::before,
+.trace-tool-mark::after {
+  content: "";
+  position: absolute;
+}
+
+.trace-tool-mark-line::before {
+  left: 1px;
+  right: 1px;
+  top: 5px;
+  border-top: 2px solid currentColor;
+}
+
+.trace-tool-mark-dashed::before {
+  left: 1px;
+  right: 1px;
+  top: 5px;
+  border-top: 2px dashed currentColor;
+}
+
+.trace-tool-mark-erase::before {
+  width: 10px;
+  height: 6px;
+  left: 3px;
+  top: 2px;
+  border: 1.5px solid currentColor;
+  transform: rotate(-32deg);
+}
+
+.trace-tool-mark-profile::before,
+.trace-tool-mark-profile::after {
+  left: 1px;
+  right: 1px;
+  border-top: 1.5px solid currentColor;
+}
+.trace-tool-mark-profile::before { top: 3px; }
+.trace-tool-mark-profile::after { bottom: 2px; }
+
+.trace-tool-mark-clear::before,
+.trace-tool-mark-clear::after {
+  width: 14px;
+  left: 1px;
+  top: 5px;
+  border-top: 1.5px solid currentColor;
+}
+.trace-tool-mark-clear::before { transform: rotate(45deg); }
+.trace-tool-mark-clear::after { transform: rotate(-45deg); }
+
+.trace-tool-mark-png,
+.trace-tool-mark-ref,
+.trace-tool-mark-expand {
+  width: auto;
+  min-width: 18px;
+  height: auto;
+  font-size: 7px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  line-height: 1;
+}
+.trace-tool-mark-png::before { content: "PNG"; position: static; }
+.trace-tool-mark-ref::before { content: "REF"; position: static; }
+.trace-tool-mark-expand::before { content: "↗"; position: static; font-size: 14px; font-weight: 600; }
+#toggle-board-expand[aria-expanded="true"] .trace-tool-mark-expand::before { content: "↙"; }
+
+.trace-guide-row {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px 10px;
+  flex-wrap: wrap;
+  padding: 4px 7px;
+  border-left: 2px solid #111111;
+  background: #f7f7f7;
+  color: #555555;
+  font-size: 9px;
+  line-height: 1.25;
+}
+
+.trace-guide-row strong {
+  color: #111111;
+  font-weight: 700;
+}
+
+.trace-guide-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+.trace-expanded-hint { display: none; }
+
+/* Deterministic solution layout: no free flex wrapping into the margins. */
+.board-panel .solution-controls {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(120px, 0.72fr) minmax(0, 1.7fr);
+  align-items: center;
+  gap: 5px 7px;
+  padding: 6px 7px;
+}
+
+.board-panel .trace-check-primary {
+  width: 100%;
+  min-width: 0;
+  min-height: 40px;
+  justify-content: center;
+  padding-inline: 7px;
+  font-size: 10.5px;
+}
+
+.board-panel .trace-check-group {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 5px;
+}
+
+.board-panel .trace-check-group .trace-check {
+  min-width: 0;
+  min-height: 40px;
+  justify-content: center;
+  padding-inline: 5px;
+  white-space: nowrap;
+  font-size: 10px;
+  gap: 5px;
+}
+
+.board-panel .trace-check-group input {
+  width: 14px;
+  height: 14px;
+}
+
+.board-panel .solution-legend {
+  grid-column: 1 / -1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px 11px;
+  flex-wrap: wrap;
+  padding: 0;
+}
+
+.board-panel .solution-legend-item {
+  gap: 5px;
+  font-size: 9px;
+}
+
+.board-panel .solution-swatch {
+  width: 10px;
+  height: 10px;
+}
+
+/* The same reference export already exists in the Document tool group.
+   Hide this duplicate in compact mode; restore it in expanded workbench mode. */
+.board-panel:not(.is-expanded) #save-reference-image-inline {
+  display: none;
+}
+
+.board-panel.is-expanded #save-reference-image-inline {
+  display: inline-flex;
+}
+
+/* Senior overlay is guidance only: the original paper canvas receives all pointer input. */
+.senior-grid-overlay {
+  z-index: 1;
+  pointer-events: none !important;
+  background: transparent !important;
+  cursor: default !important;
+}
+
+.paper-shell[data-grid-mode="senior-3x3"] {
+  background: #ffffff;
+}
+
+.paper-shell[data-grid-mode="senior-3x3"]::after {
+  content: "RETÍCULA 3×3 · AJUSTE ½ MÓDULO";
+  position: absolute;
+  right: 7px;
+  bottom: 6px;
+  z-index: 3;
+  padding: 3px 5px;
+  border: 1px solid rgba(17, 17, 17, 0.24);
+  background: rgba(255, 255, 255, 0.9);
+  color: #666666;
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  line-height: 1;
+  pointer-events: none;
+}
+
+/* Expanded subwindow: same DOM and canvases, larger working surface and no state loss. */
+body.trace-board-expanded {
+  overflow: hidden !important;
+}
+
+.board-panel.is-expanded {
+  position: fixed;
+  inset: 12px;
+  z-index: 950;
+  width: auto !important;
+  height: auto !important;
+  max-width: none !important;
+  max-height: none !important;
+  padding: 16px;
+  border: 2px solid #111111;
+  background: #ffffff;
+  overflow: hidden;
+}
+
+.board-panel.is-expanded::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: rgba(17, 17, 17, 0.44);
+}
+
+.board-panel.is-expanded .board-head {
+  display: grid;
+  grid-template-columns: minmax(195px, 0.45fr) minmax(0, 1.55fr);
+  grid-template-areas:
+    "title toolbar"
+    "title guide"
+    "solution solution";
+  align-items: start;
+  gap: 7px 12px;
+  margin-bottom: 9px;
+}
+
+.board-panel.is-expanded .trace-title-block {
+  grid-area: title;
+  align-self: stretch;
+  align-content: start;
+  padding-right: 12px;
+  border-right: 1px solid #d2d2d2;
+}
+
+.board-panel.is-expanded .trace-toolbar {
+  grid-area: toolbar;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.board-panel.is-expanded .trace-toolbar-group {
+  padding: 6px;
+}
+
+.board-panel.is-expanded .trace-guide-row {
+  grid-area: guide;
+}
+
+.board-panel.is-expanded .trace-expanded-hint {
+  display: inline;
+  color: #777777;
+}
+
+.board-panel.is-expanded .solution-controls {
+  grid-area: solution;
+  grid-template-columns: minmax(150px, 0.55fr) minmax(320px, 1.35fr) minmax(180px, 0.7fr) minmax(175px, 0.7fr);
+  gap: 7px;
+  padding: 7px;
+}
+
+.board-panel.is-expanded .solution-legend,
+.board-panel.is-expanded #save-reference-image-inline {
+  grid-column: auto;
+}
+
+.board-panel.is-expanded #save-reference-image-inline {
+  width: 100%;
+  min-width: 0;
+  min-height: 40px;
+  height: 40px;
+  padding-inline: 7px;
+  justify-content: center;
+  white-space: normal;
+  font-size: 10px;
+  line-height: 1.1;
+}
+
+.board-panel.is-expanded .paper-shell {
+  min-height: 0;
+}
+
+.board-panel.is-expanded .paper-shell::after {
+  right: 10px;
+  bottom: 9px;
+  padding: 4px 6px;
+  font-size: 8px;
+}
+
+/* Medium desktop/laptop: still two toolbar families side-by-side, each 2×2. */
+@media (max-width: 1480px) {
+  .tool-row.trace-tool-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .trace-tool-grid .tool-button {
+    padding-inline: 5px;
+  }
+
+  .trace-tool-label {
+    font-size: 9.5px;
+  }
+
+  .board-panel:not(.is-expanded) .solution-controls {
+    grid-template-columns: minmax(112px, 0.7fr) minmax(0, 1.8fr);
+  }
+
+  .board-panel.is-expanded .tool-row.trace-tool-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .board-panel.is-expanded .solution-controls {
+    grid-template-columns: minmax(135px, 0.65fr) minmax(0, 1.55fr) minmax(150px, 0.75fr);
+  }
+
+  .board-panel.is-expanded .solution-legend {
+    grid-column: auto;
+  }
+
+  .board-panel.is-expanded #save-reference-image-inline {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Tablet normal mode is deliberately lean so the drawing sheet stays >=300px high. */
+@media (max-width: 1180px) and (min-width: 621px) {
+  .board-panel:not(.is-expanded) .trace-board-subtitle {
+    display: none;
+  }
+
+  .board-panel:not(.is-expanded) .trace-toolbar {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 5px;
+  }
+
+  .board-panel:not(.is-expanded) .trace-toolbar-group {
+    gap: 2px;
+    padding: 4px;
+  }
+
+  .board-panel:not(.is-expanded) .trace-group-label {
+    font-size: 7px;
+  }
+
+  .board-panel:not(.is-expanded) .trace-tool-grid .tool-button {
+    min-height: 40px;
+    height: 40px;
+    padding: 3px 4px;
+    gap: 3px;
+  }
+
+  .board-panel:not(.is-expanded) .trace-tool-mark {
+    display: none;
+  }
+
+  .board-panel:not(.is-expanded) .trace-tool-label {
+    font-size: 9px;
+    line-height: 1.05;
+  }
+
+  .board-panel:not(.is-expanded) .trace-guide-row {
+    padding: 3px 5px;
+    gap: 3px 7px;
+    font-size: 8px;
+  }
+
+  .board-panel:not(.is-expanded) .solution-controls {
+    grid-template-columns: minmax(105px, 0.72fr) minmax(0, 1.75fr);
+    gap: 4px 5px;
+    padding: 5px;
+  }
+
+  .board-panel:not(.is-expanded) .solution-legend {
+    display: none;
+  }
+
+  .board-panel.is-expanded {
+    inset: 7px;
+    padding: 11px;
+  }
+
+  .board-panel.is-expanded .board-head {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "title"
+      "toolbar"
+      "guide"
+      "solution";
+  }
+
+  .board-panel.is-expanded .trace-title-block {
+    padding-right: 0;
+    padding-bottom: 6px;
+    border-right: 0;
+    border-bottom: 1px solid #d2d2d2;
+  }
+
+  .board-panel.is-expanded .solution-controls {
+    grid-template-columns: minmax(130px, 0.75fr) minmax(0, 1.8fr);
+  }
+
+  .board-panel.is-expanded .solution-legend {
+    grid-column: 1 / -1;
+  }
+
+  .board-panel.is-expanded #save-reference-image-inline {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 620px) {
+  .trace-toolbar {
+    grid-template-columns: 1fr;
+  }
+
+  .tool-row.trace-tool-grid,
+  .board-panel.is-expanded .tool-row.trace-tool-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .trace-tool-mark {
+    display: none;
+  }
+
+  .trace-tool-label {
+    font-size: 10px;
+  }
+
+  .trace-guide-row {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 2px;
+    font-size: 8px;
+  }
+
+  .board-panel .solution-controls,
+  .board-panel.is-expanded .solution-controls {
+    grid-template-columns: 1fr;
+  }
+
+  .board-panel .solution-legend,
+  .board-panel.is-expanded .solution-legend,
+  .board-panel.is-expanded #save-reference-image-inline {
+    grid-column: 1;
+  }
+
+  .board-panel:not(.is-expanded) .solution-legend {
+    display: none;
+  }
+
+  .board-panel.is-expanded {
+    inset: 0;
+    padding: 9px;
+    border-width: 0;
+  }
+
+  .board-panel.is-expanded .board-head {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "title"
+      "toolbar"
+      "guide"
+      "solution";
+  }
+
+  .board-panel.is-expanded .trace-title-block {
+    padding-right: 0;
+    padding-bottom: 5px;
+    border-right: 0;
+    border-bottom: 1px solid #d2d2d2;
+  }
+}

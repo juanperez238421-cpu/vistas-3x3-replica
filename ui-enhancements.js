@@ -1,3 +1,6 @@
+import "./trace-workbench-v2.js";
+import "./trace-workbench-responsive.js";
+
 /* Progressive, non-destructive UI semantics for the existing Vistas 3x3 app. */
 
 const q = (selector, root = document) => root.querySelector(selector);
