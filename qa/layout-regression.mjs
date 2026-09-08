@@ -79,8 +79,8 @@ const toolbarGrids = await page.locator(".trace-tool-grid").evaluateAll((rows) =
   }),
 );
 add(
-  "1728px grouped toolbar keeps four columns per tool family",
-  toolbarGrids.length === 2 && toolbarGrids.every((grid) => grid.columns === 4),
+  "1728px grouped toolbar uses two comfortable columns per tool family",
+  toolbarGrids.length === 2 && toolbarGrids.every((grid) => grid.columns === 2),
   JSON.stringify(toolbarGrids),
 );
 
