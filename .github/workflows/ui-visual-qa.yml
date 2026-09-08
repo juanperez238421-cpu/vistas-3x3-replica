@@ -1,0 +1,62 @@
+name: UI Visual QA
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  visual-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install QA dependencies
+        working-directory: qa
+        run: npm install --no-audit --no-fund
+
+      - name: Install Chromium
+        working-directory: qa
+        run: npx playwright install --with-deps chromium
+
+      - name: Start static server
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/vistas-http.log 2>&1 &
+          echo $! > /tmp/vistas-http.pid
+          for i in {1..30}; do
+            if curl -fsS http://127.0.0.1:4173/ >/dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/vistas-http.log
+          exit 1
+
+      - name: Run visual QA
+        env:
+          QA_BASE_URL: http://127.0.0.1:4173/
+        run: node qa/visual-qa.mjs
+
+      - name: Upload visual QA frames and report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ui-visual-qa
+          path: qa-artifacts/
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Server log
+        if: failure()
+        run: cat /tmp/vistas-http.log || true

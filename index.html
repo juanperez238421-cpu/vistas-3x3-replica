@@ -3,8 +3,13 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Biblioteca interactiva de figuras 3x3 para practicar alzado, planta y vistas laterales del sistema diédrico." />
+    <meta name="theme-color" content="#eaf0f6" />
     <title>Vistas 3x3 - Biblioteca</title>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
     <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./ui-enhancements.css" />
+    <link rel="stylesheet" href="./ui-color-system.css" />
     <script type="importmap">
       {
         "imports": {
@@ -14,11 +19,12 @@
     </script>
   </head>
   <body>
-    <main class="app-shell">
+    <a class="skip-link" href="#three-stage">Saltar al visor 3D</a>
+    <main class="app-shell" id="main-content">
       <aside class="library-panel panel">
         <header class="panel-head library-head">
           <div>
-            <p class="kicker">Libreria</p>
+            <p class="kicker">Librería</p>
             <h2>Figuras</h2>
           </div>
         </header>
@@ -54,7 +60,7 @@
               <p class="card-kicker">Nivel</p>
               <div class="difficulty-tabs">
                 <button class="tool-button is-active" data-difficulty="basico" type="button">
-                  Basico
+                  Básico
                 </button>
                 <button class="tool-button" data-difficulty="intermedio" type="button">
                   Intermedio
@@ -107,7 +113,7 @@
             <div class="viewer-overlay viewer-overlay-top">
               <button id="viewer-status-card" class="viewer-status viewer-status-button" type="button">
                 <span class="viewer-status-label">Vista</span>
-                <strong id="current-view-label">Isometrica</strong>
+                <strong id="current-view-label">Isométrica</strong>
               </button>
             </div>
 
@@ -177,19 +183,19 @@
                 <div class="palette-grid">
                   <label class="color-control">
                     <span>Figura</span>
-                    <input id="color-figure" type="color" value="#c7cdd3" />
+                    <input id="color-figure" type="color" value="#d8e0e8" />
                   </label>
                   <label class="color-control">
                     <span>Grid</span>
-                    <input id="color-grid" type="color" value="#cbd3dc" />
+                    <input id="color-grid" type="color" value="#b9c7d6" />
                   </label>
                   <label class="color-control">
                     <span>Fondo</span>
-                    <input id="color-background" type="color" value="#fdfeff" />
+                    <input id="color-background" type="color" value="#f2f6fa" />
                   </label>
                   <label class="color-control">
                     <span>Acento</span>
-                    <input id="color-accent" type="color" value="#1a2735" />
+                    <input id="color-accent" type="color" value="#2563eb" />
                   </label>
                 </div>
               </section>
@@ -231,7 +237,7 @@
               <div class="face-paint-grid">
                 <label class="color-control">
                   <span>Nuevo color</span>
-                  <input id="color-face-paint" type="color" value="#b87333" />
+                  <input id="color-face-paint" type="color" value="#d97706" />
                 </label>
               </div>
 
@@ -346,5 +352,6 @@
     </main>
 
     <script type="module" src="./app.js"></script>
+    <script type="module" src="./ui-enhancements.js"></script>
   </body>
 </html>

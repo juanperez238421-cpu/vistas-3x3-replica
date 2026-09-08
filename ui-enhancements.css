@@ -1,0 +1,517 @@
+/*
+ * UI QA v2 overrides.
+ * Keeps the original visual language and components while improving containment,
+ * responsive density, focus states, touch targets, and reduced-motion behavior.
+ */
+
+:root {
+  --qa-focus-width: 3px;
+  --qa-scrollbar-size: 10px;
+  --qa-mobile-panel-gap: 12px;
+}
+
+html {
+  text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overscroll-behavior: none;
+}
+
+button,
+input,
+canvas {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button {
+  touch-action: manipulation;
+}
+
+.skip-link {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  z-index: 1000;
+  padding: 10px 12px;
+  border: 1.5px solid var(--line);
+  background: #ffffff;
+  color: var(--ink);
+  font-weight: 700;
+  transform: translateY(-160%);
+  transition: transform 160ms var(--easing);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+:where(button, input, [tabindex]):focus-visible {
+  outline: var(--qa-focus-width) solid var(--viewer-accent);
+  outline-offset: 2px;
+  position: relative;
+  z-index: 8;
+}
+
+.tool-button,
+.viewer-control,
+.quiz-option,
+.trace-check,
+.piece-card {
+  line-height: 1.25;
+}
+
+.tool-button,
+.viewer-control {
+  min-height: max(42px, var(--button-height));
+}
+
+.compact-button,
+.floating-close {
+  min-width: 42px;
+  min-height: 42px;
+}
+
+.sidebar-tabs,
+.difficulty-tabs,
+.tool-row,
+.solution-controls,
+.viewer-preset-group,
+.viewer-toggle-group {
+  min-width: 0;
+}
+
+.piece-library,
+.content-stack,
+.quiz-panel {
+  scrollbar-gutter: stable;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: #8a8a8a transparent;
+}
+
+.piece-library::-webkit-scrollbar,
+.content-stack::-webkit-scrollbar,
+.quiz-panel::-webkit-scrollbar {
+  width: var(--qa-scrollbar-size);
+}
+
+.piece-library::-webkit-scrollbar-thumb,
+.content-stack::-webkit-scrollbar-thumb,
+.quiz-panel::-webkit-scrollbar-thumb {
+  background: #8a8a8a;
+  border: 3px solid #ffffff;
+}
+
+.piece-card {
+  contain: layout paint;
+}
+
+.viewer-stage,
+.viewer-render-layer,
+.paper-shell {
+  contain: layout paint;
+}
+
+.viewer-render-layer > canvas,
+.paper-canvas,
+.viewcube-canvas {
+  max-width: 100%;
+}
+
+.viewer-stage {
+  min-width: 0;
+}
+
+.viewer-status-button {
+  min-height: 44px;
+}
+
+.floating-panel {
+  max-height: calc(100% - 20px);
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+
+.floating-tools-panel {
+  max-width: calc(100% - 20px);
+}
+
+.tool-row .tool-button {
+  min-width: 0;
+  padding-inline: 10px;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+.solution-controls > * {
+  min-width: 0;
+}
+
+.solution-legend-item {
+  white-space: nowrap;
+}
+
+.trace-check {
+  cursor: pointer;
+}
+
+.trace-check:has(input:focus-visible) {
+  outline: var(--qa-focus-width) solid var(--viewer-accent);
+  outline-offset: 2px;
+}
+
+.color-control input[type="color"] {
+  min-height: 42px;
+}
+
+@media (max-width: 1680px) and (min-width: 1361px) {
+  :root {
+    --panel-pad: clamp(14px, 1vw, 20px);
+    --shell-gap: clamp(12px, 0.9vw, 18px);
+    --button-height: clamp(42px, 3vw, 48px);
+  }
+
+  /* Avoid the old fixed minimums clipping the board at common 1440px laptop widths. */
+  .app-shell {
+    grid-template-columns: minmax(250px, 0.82fr) minmax(0, 2.08fr) minmax(390px, 1.28fr);
+  }
+
+  .tool-row {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .tool-row .tool-button {
+    padding-inline: 6px;
+    font-size: 11px;
+  }
+
+  .board-head {
+    gap: 12px;
+  }
+
+  .solution-controls {
+    gap: 9px 12px;
+    padding: 10px 12px;
+  }
+}
+
+@media (max-width: 1360px) and (min-width: 1181px) {
+  :root {
+    --panel-pad: 14px;
+    --shell-gap: 12px;
+    --button-height: 42px;
+  }
+
+  .app-shell {
+    grid-template-columns: minmax(240px, 0.8fr) minmax(0, 1.95fr) minmax(360px, 1.2fr);
+  }
+
+  .panel-head {
+    margin-bottom: 12px;
+  }
+
+  .board-head {
+    gap: 10px;
+  }
+
+  .tool-row {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 7px;
+  }
+
+  .tool-row .tool-button {
+    padding-inline: 5px;
+    font-size: 11px;
+  }
+
+  .solution-controls {
+    gap: 8px;
+    padding: 9px 10px;
+  }
+}
+
+@media (max-width: 1180px) and (min-width: 901px) {
+  :root {
+    --panel-pad: 14px;
+    --shell-gap: 12px;
+    --button-height: 42px;
+  }
+
+  html,
+  body {
+    height: auto;
+  }
+
+  body {
+    min-height: 100vh;
+    overflow: auto;
+    overscroll-behavior-y: auto;
+  }
+
+  /* Keep the same library + two-workspace tablet format, but let the document
+     scroll vertically instead of collapsing the drawing canvas to fit 768px. */
+  .app-shell {
+    height: auto;
+    max-height: none;
+    overflow: visible;
+    grid-template-rows: 292px minmax(680px, 72svh);
+  }
+
+  .library-panel {
+    height: 292px;
+    max-height: 292px;
+  }
+
+  .viewer-panel,
+  .board-panel {
+    height: max(680px, 72svh);
+  }
+
+  .library-head,
+  .current-piece-card {
+    margin-bottom: 8px;
+  }
+
+  .sidebar-tabs {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+
+  .sidebar-tabs .tool-button,
+  .difficulty-tabs .tool-button {
+    min-height: 40px;
+    padding-inline: 8px;
+  }
+
+  .sidebar-pane {
+    gap: 8px;
+  }
+
+  .sidebar-pane .sidebar-card {
+    padding: 9px 10px;
+  }
+
+  .difficulty-tabs {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  .piece-library,
+  .content-stack {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .piece-card {
+    padding: 10px 12px;
+  }
+
+  .viewer-head,
+  .board-head {
+    margin-bottom: 10px;
+  }
+
+  .board-head {
+    gap: 9px;
+  }
+
+  .tool-row {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  .tool-row .tool-button {
+    min-height: 40px;
+    padding-inline: 5px;
+    font-size: 10.5px;
+  }
+
+  .solution-controls {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: stretch;
+    gap: 6px;
+    padding: 7px;
+  }
+
+  .trace-check,
+  .trace-check-primary {
+    width: 100%;
+    min-width: 0;
+    min-height: 36px;
+  }
+
+  .trace-check-group,
+  .solution-legend {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 5px;
+  }
+
+  .solution-legend {
+    align-items: center;
+  }
+
+  .solution-legend-item {
+    justify-content: center;
+    font-size: 10px;
+  }
+
+  #save-reference-image-inline {
+    min-height: 40px;
+  }
+}
+
+@media (max-width: 900px) {
+  body {
+    overscroll-behavior-y: auto;
+  }
+
+  .app-shell {
+    gap: var(--qa-mobile-panel-gap);
+  }
+
+  .panel {
+    padding: 12px;
+  }
+
+  .panel-head {
+    margin-bottom: 12px;
+  }
+
+  .viewer-head {
+    flex-wrap: wrap;
+  }
+
+  .viewer-head .nav-group {
+    margin-left: auto;
+  }
+
+  .sidebar-content {
+    min-height: clamp(440px, 62svh, 540px);
+  }
+
+  .sidebar-tabs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .sidebar-tabs .tool-button {
+    min-height: 44px;
+  }
+
+  .viewer-stage,
+  .paper-shell {
+    min-height: clamp(440px, 64svh, 560px);
+  }
+
+  .solution-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .trace-check-group,
+  .solution-legend {
+    width: 100%;
+  }
+
+  .solution-legend {
+    justify-content: space-between;
+  }
+
+  .viewcube-shell {
+    width: clamp(112px, 31vw, 132px);
+  }
+
+  .viewer-status {
+    min-width: 128px;
+    padding: 8px 10px;
+  }
+
+  .floating-panel {
+    max-height: calc(100% - 16px);
+  }
+
+  .floating-tools-panel,
+  .floating-face-panel {
+    left: 8px !important;
+    width: calc(100% - 16px);
+    max-width: calc(100% - 16px);
+  }
+}
+
+@media (max-width: 560px) {
+  h1,
+  h2 {
+    font-size: clamp(26px, 9vw, 34px);
+  }
+
+  h3 {
+    font-size: 21px;
+  }
+
+  .tool-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 7px;
+  }
+
+  .tool-row .tool-button {
+    min-height: 44px;
+    padding-inline: 7px;
+    font-size: 12px;
+  }
+
+  .difficulty-tabs {
+    grid-template-columns: 1fr;
+  }
+
+  .viewer-overlay-top {
+    top: 8px;
+  }
+
+  .viewer-overlay {
+    left: 8px;
+    right: 8px;
+  }
+
+  .viewcube-shell {
+    top: 8px;
+    right: 8px;
+  }
+
+  .palette-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .face-paint-actions {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.001ms !important;
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
