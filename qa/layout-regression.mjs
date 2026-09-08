@@ -49,7 +49,7 @@ add(
   JSON.stringify(activeContainment),
 );
 
-const toolbarButtons = await page.locator(".tool-row .tool-button").evaluateAll((buttons) =>
+const toolbarButtons = await page.locator(".trace-tool-grid .tool-button").evaluateAll((buttons) =>
   buttons.map((button) => ({
     id: button.id,
     text: button.textContent.trim(),
@@ -68,18 +68,20 @@ add(
   clippedToolbar.length ? JSON.stringify(clippedToolbar) : "all toolbar labels fit",
 );
 
-const toolbarGrid = await page.locator(".tool-row").evaluate((el) => {
-  const style = getComputedStyle(el);
-  return {
-    columns: style.gridTemplateColumns.split(" ").filter(Boolean).length,
-    template: style.gridTemplateColumns,
-    height: el.getBoundingClientRect().height,
-  };
-});
+const toolbarGrids = await page.locator(".trace-tool-grid").evaluateAll((rows) =>
+  rows.map((el) => {
+    const style = getComputedStyle(el);
+    return {
+      columns: style.gridTemplateColumns.split(" ").filter(Boolean).length,
+      template: style.gridTemplateColumns,
+      height: el.getBoundingClientRect().height,
+    };
+  }),
+);
 add(
-  "1728px toolbar uses wrapped desktop layout",
-  toolbarGrid.columns === 4,
-  JSON.stringify(toolbarGrid),
+  "1728px grouped toolbar keeps four columns per tool family",
+  toolbarGrids.length === 2 && toolbarGrids.every((grid) => grid.columns === 4),
+  JSON.stringify(toolbarGrids),
 );
 
 await page.locator("#face-editor-panel").evaluate((el) => {
