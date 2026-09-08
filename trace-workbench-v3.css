@@ -196,6 +196,7 @@
 
 #solution-canvas {
   z-index: 2;
+  background: transparent !important;
 }
 
 .paper-shell[data-grid-mode="senior-3x3"]::after {
