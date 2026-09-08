@@ -48,6 +48,11 @@ jobs:
           QA_BASE_URL: http://127.0.0.1:4173/
         run: node qa/visual-qa.mjs
 
+      - name: Run 1728px layout regression QA
+        env:
+          QA_BASE_URL: http://127.0.0.1:4173/
+        run: node qa/layout-regression.mjs
+
       - name: Upload visual QA frames and report
         if: always()
         uses: actions/upload-artifact@v4

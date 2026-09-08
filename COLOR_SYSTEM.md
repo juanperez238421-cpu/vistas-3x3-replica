@@ -1,46 +1,29 @@
-# Vistas 3x3 · Senior Engineering Color System
+# Vistas 3x3 · Monochrome Production UI
 
-This layer preserves the existing CAD workflow and uses color only to communicate hierarchy, state, projection type and action semantics.
+The production interface intentionally uses a restrained **black / white / gray CAD language**. Color is not used for ordinary navigation, difficulty, drawing-tool, hover or focus states.
 
-## Core palette
+## Core UI palette
 
-| Role | Color | Use |
-| --- | --- | --- |
-| App background | `#EAF0F6` | Neutral workspace around panels |
-| Ink | `#182230` | Primary text / structure |
-| Muted ink | `#667085` | Secondary information |
-| Border | `#C8D3DF` | Panels, cards and controls |
-| Primary | `#2563EB` | Selected navigation, alzado, focus and primary state |
-| Teal | `#0F8A70` | Planta, basic level, positive/export affordances |
-| Amber | `#D97706` | Lateral projection and intermediate level |
-| Danger | `#BE4057` | Erase/clear and advanced level |
-| Indigo | `#6558D3` | Dashed-line drawing mode |
+| Role | Value |
+| --- | --- |
+| App background | `#FFFFFF` |
+| Primary ink / active controls | `#111111` |
+| Structural border | `#1C1C1C` |
+| Soft surface | `#F3F3F3` |
+| Secondary surface | `#FAFAFA` |
+| Muted text | `#666666` |
 
-## Projection semantics
+## Production rules
 
-- **Lateral:** amber `#D97706`
-- **Alzado:** blue `#2563EB`
-- **Planta:** teal `#0F8A70`
+1. Active navigation and tools use black with white text.
+2. Hover states use neutral gray only.
+3. Focus rings remain monochrome and high-contrast.
+4. The figure catalogue must never create horizontal scrolling.
+5. Selected figure cards must not translate outside the scrollport.
+6. The drawing toolbar must wrap before labels clip.
+7. The face editor must remain compact enough that it does not dominate the 3D geometry.
+8. Responsive, keyboard, drawing, geometry and export behavior remain unchanged.
 
-The same projection colors are used in the solution overlay, legend and solution toggles.
+Projection swatches and user-selected face/material colors are domain content, not interface chrome, so they may remain colored where they communicate the drawing/model itself.
 
-## 3D defaults
-
-- Figure: `#D8E0E8`
-- Grid: `#B9C7D6`
-- Background: `#F2F6FA`
-- Accent: `#2563EB`
-- Face paint: `#D97706`
-
-## Interaction principles
-
-1. White/neutral surfaces remain the dominant canvas.
-2. Blue is reserved for primary selection and navigation.
-3. Projection colors stay consistent across 2D and 3D contexts.
-4. Difficulty buttons use semantic color only when active/hovered.
-5. Destructive controls use rose/red only on activation or hover.
-6. Focus remains highly visible with a blue ring.
-7. `prefers-contrast: more` strengthens borders and secondary text.
-8. Existing responsive, keyboard, drawing, geometry and export logic is unchanged.
-
-Implementation lives in `ui-color-system.css`, loaded after `styles.css` and `ui-enhancements.css` so it remains independently reviewable and reversible.
+Implementation lives in `ui-color-system.css`, loaded after `styles.css` and `ui-enhancements.css` as the final production visual/containment layer.
