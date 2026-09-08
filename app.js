@@ -69,9 +69,9 @@ const BOARD_LABELS = {
 };
 
 const SOLUTION_VIEW_CONFIG = {
-  lateral: { preset: "right", color: "#B88A5E" },
-  alzado: { preset: "front", color: "#5B7DC8" },
-  planta: { preset: "top", color: "#5F8D76" },
+  lateral: { preset: "right", color: "#D97706" },
+  alzado: { preset: "front", color: "#2563EB" },
+  planta: { preset: "top", color: "#0F8A70" },
 };
 const SOLUTION_EDGE_THRESHOLD = 1;
 const SOLUTION_SEGMENT_EPSILON = 0.0008;
@@ -79,11 +79,11 @@ const SOLUTION_FACE_FILL_ALPHA = 0.46;
 const SOLUTION_FACE_STROKE_ALPHA = 0.58;
 
 const VIEWER_DEFAULT_COLORS = {
-  figure: "#C7CDD3",
-  grid: "#CBD3DC",
-  background: "#FDFEFF",
-  accent: "#1A2735",
-  facePaint: "#B87333",
+  figure: "#D8E0E8",
+  grid: "#B9C7D6",
+  background: "#F2F6FA",
+  accent: "#2563EB",
+  facePaint: "#D97706",
 };
 
 const ORIENTATION_LABELS = {
