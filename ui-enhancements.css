@@ -186,6 +186,11 @@ button {
     --button-height: clamp(42px, 3vw, 48px);
   }
 
+  /* Avoid the old fixed minimums clipping the board at common 1440px laptop widths. */
+  .app-shell {
+    grid-template-columns: minmax(250px, 0.82fr) minmax(0, 2.08fr) minmax(390px, 1.28fr);
+  }
+
   .tool-row {
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 8px;
@@ -208,6 +213,10 @@ button {
     --button-height: 42px;
   }
 
+  .app-shell {
+    grid-template-columns: minmax(240px, 0.8fr) minmax(0, 1.95fr) minmax(360px, 1.2fr);
+  }
+
   .panel-head {
     margin-bottom: 12px;
   }
@@ -217,7 +226,8 @@ button {
   }
 
   .tool-row {
-    gap: 8px;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 7px;
   }
 
   .solution-controls {
@@ -233,13 +243,34 @@ button {
     --button-height: 42px;
   }
 
+  html,
+  body {
+    height: auto;
+  }
+
+  body {
+    min-height: 100vh;
+    overflow: auto;
+    overscroll-behavior-y: auto;
+  }
+
+  /* Keep the same library + two-workspace tablet format, but let the document
+     scroll vertically instead of collapsing the drawing canvas to fit 768px. */
   .app-shell {
-    grid-template-rows: clamp(282px, 38dvh, 338px) minmax(0, 1fr);
+    height: auto;
+    max-height: none;
+    overflow: visible;
+    grid-template-rows: 292px minmax(680px, 72svh);
   }
 
   .library-panel {
-    height: 100%;
-    max-height: none;
+    height: 292px;
+    max-height: 292px;
+  }
+
+  .viewer-panel,
+  .board-panel {
+    height: max(680px, 72svh);
   }
 
   .library-head,
@@ -268,11 +299,13 @@ button {
   }
 
   .difficulty-tabs {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 6px;
   }
 
   .piece-library,
   .content-stack {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 8px;
   }
 
@@ -285,17 +318,53 @@ button {
     margin-bottom: 10px;
   }
 
+  .board-head {
+    gap: 9px;
+  }
+
   .tool-row {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 6px;
   }
 
-  .solution-controls {
-    padding: 8px;
-    gap: 7px;
+  .tool-row .tool-button {
+    min-height: 40px;
+    padding-inline: 6px;
+    font-size: 11px;
   }
 
-  .trace-check {
+  .solution-controls {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: stretch;
+    gap: 6px;
+    padding: 7px;
+  }
+
+  .trace-check,
+  .trace-check-primary {
+    width: 100%;
+    min-width: 0;
+    min-height: 36px;
+  }
+
+  .trace-check-group,
+  .solution-legend {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 5px;
+  }
+
+  .solution-legend {
+    align-items: center;
+  }
+
+  .solution-legend-item {
+    justify-content: center;
+    font-size: 10px;
+  }
+
+  #save-reference-image-inline {
     min-height: 38px;
   }
 }
