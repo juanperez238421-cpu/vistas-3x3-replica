@@ -91,23 +91,34 @@ function computePaperLayout(width, height) {
 
 function drawProjectionHeader(ctx, rect, label, badge) {
   const fontSize = clamp(rect.size * 0.043, 8, 11);
-  const bandHeight = fontSize + 5;
-  const y = Math.max(1, rect.y - bandHeight - 2);
+  const bandHeight = fontSize + 6;
+  const legacyMaskHeight = clamp(rect.size * 0.11, 25, 38);
+  const maskTop = Math.max(0, rect.y - legacyMaskHeight);
+  const labelY = Math.max(maskTop + 2, rect.y - bandHeight - 3);
 
   ctx.save();
-  ctx.fillStyle = "rgba(255,255,255,.98)";
-  ctx.fillRect(rect.x - 1, y - 1, rect.size + 2, bandHeight + 2);
+
+  /*
+   * app.js still paints its historic projection label on the drawing canvas.
+   * V4 keeps that canvas untouched for compatibility, then masks the complete
+   * historic label zone on this transparent overlay before drawing the new
+   * technical header. The taller mask is important in enlarged study mode,
+   * where the inherited label font also scales up.
+   */
+  ctx.fillStyle = "#ffffff";
+  ctx.fillRect(rect.x - 4, maskTop, rect.size + 8, rect.y - maskTop + 1);
+
   ctx.strokeStyle = "rgba(17,17,17,.18)";
   ctx.lineWidth = 1;
   ctx.beginPath();
-  ctx.moveTo(rect.x, y + bandHeight);
-  ctx.lineTo(rect.x + rect.size, y + bandHeight);
+  ctx.moveTo(rect.x, rect.y - 1);
+  ctx.lineTo(rect.x + rect.size, rect.y - 1);
   ctx.stroke();
 
   ctx.font = `700 ${fontSize}px "Segoe UI", Arial, sans-serif`;
   ctx.fillStyle = "rgba(17,17,17,.82)";
   ctx.textBaseline = "top";
-  ctx.fillText(label, rect.x + 2, y + 2);
+  ctx.fillText(label, rect.x + 2, labelY);
 
   if (badge) {
     ctx.font = `700 ${Math.max(7, fontSize - 1)}px "Segoe UI", Arial, sans-serif`;
@@ -115,11 +126,11 @@ function drawProjectionHeader(ctx, rect, label, badge) {
     const badgeWidth = metrics.width + 8;
     const bx = rect.x + rect.size - badgeWidth - 2;
     ctx.fillStyle = "rgba(17,17,17,.06)";
-    ctx.fillRect(bx, y + 1, badgeWidth, bandHeight - 2);
+    ctx.fillRect(bx, labelY - 1, badgeWidth, bandHeight - 2);
     ctx.strokeStyle = "rgba(17,17,17,.22)";
-    ctx.strokeRect(bx + .5, y + 1.5, badgeWidth - 1, bandHeight - 3);
+    ctx.strokeRect(bx + .5, labelY - .5, badgeWidth - 1, bandHeight - 3);
     ctx.fillStyle = "rgba(17,17,17,.72)";
-    ctx.fillText(badge, bx + 4, y + 2);
+    ctx.fillText(badge, bx + 4, labelY);
   }
   ctx.restore();
 }
