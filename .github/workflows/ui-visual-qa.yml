@@ -48,10 +48,10 @@ jobs:
           QA_BASE_URL: http://127.0.0.1:4173/
         run: node qa/visual-qa.mjs
 
-      - name: Run static Trazo V3 regression QA
+      - name: Run Trazo V4 Figure + Trace study zoom QA
         env:
           QA_BASE_URL: http://127.0.0.1:4173/
-        run: node qa/trace-static-v3-qa.mjs
+        run: node qa/trace-study-zoom-v4-qa.mjs
 
       - name: Upload visual QA frames and report
         if: always()
