@@ -99,7 +99,7 @@
   display: none !important;
 }
 
-/* More sheet, less chrome. */
+/* More sheet, less chrome on desktop/tablet. Mobile gets an explicit minimum below. */
 .board-panel .paper-shell {
   min-height: 0;
 }
@@ -374,7 +374,7 @@ body.trace-study-zoom::before {
   }
 
   .board-panel:not(.is-study-zoom-peer) .trace-tool-grid-v3 .tool-button {
-    min-height: 38px;
+    min-height: 40px;
     padding: 4px 3px;
   }
 
@@ -394,7 +394,7 @@ body.trace-study-zoom::before {
 /* Side-by-side study zoom remains useful down to tablet-landscape widths. */
 @media (max-width: 1120px) and (min-width: 901px) {
   .app-shell.is-study-zoom {
-    grid-template-columns: minmax(360px, .82fr) minmax(480px, 1.18fr);
+    grid-template-columns: minmax(420px, .96fr) minmax(480px, 1.04fr);
   }
 
   .app-shell.is-study-zoom .board-head {
@@ -423,12 +423,23 @@ body.trace-study-zoom::before {
   }
 }
 
-/* Mobile: the study window becomes a vertically scrollable two-part studio. */
+/* Mobile: preserve the normal sheet height and make study zoom a two-part studio. */
 @media (max-width: 900px) {
+  .board-panel:not(.is-study-zoom-peer) {
+    height: auto !important;
+    min-height: 980px;
+  }
+
+  .board-panel:not(.is-study-zoom-peer) .paper-shell {
+    flex: 0 0 540px;
+    height: 540px;
+    min-height: 540px;
+  }
+
   .app-shell.is-study-zoom {
     inset: 0;
     grid-template-columns: 1fr;
-    grid-template-rows: minmax(310px, 42vh) minmax(560px, auto);
+    grid-template-rows: minmax(310px, 42vh) minmax(640px, auto);
     gap: 6px;
     overflow-y: auto;
     background: #fff;
@@ -448,7 +459,7 @@ body.trace-study-zoom::before {
 
   .app-shell.is-study-zoom .board-panel {
     grid-row: 2;
-    min-height: 560px;
+    min-height: 640px;
   }
 
   .app-shell.is-study-zoom .board-head {
@@ -481,6 +492,12 @@ body.trace-study-zoom::before {
 
   .app-shell.is-study-zoom .solution-legend {
     display: none;
+  }
+
+  .app-shell.is-study-zoom .paper-shell {
+    flex: 0 0 360px;
+    height: 360px;
+    min-height: 360px;
   }
 }
 
