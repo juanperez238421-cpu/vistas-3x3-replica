@@ -92,7 +92,8 @@ function computePaperLayout(width, height) {
 function drawProjectionHeader(ctx, rect, label, badge) {
   const fontSize = clamp(rect.size * 0.043, 8, 11);
   const bandHeight = fontSize + 6;
-  const legacyMaskHeight = clamp(rect.size * 0.11, 25, 38);
+  /* 22–24 px covers the inherited app.js label without reaching the adjacent grid. */
+  const legacyMaskHeight = clamp(rect.size * 0.08, 22, 24);
   const maskTop = Math.max(0, rect.y - legacyMaskHeight);
   const labelY = Math.max(maskTop + 2, rect.y - bandHeight - 3);
 
@@ -100,10 +101,8 @@ function drawProjectionHeader(ctx, rect, label, badge) {
 
   /*
    * app.js still paints its historic projection label on the drawing canvas.
-   * V4 keeps that canvas untouched for compatibility, then masks the complete
-   * historic label zone on this transparent overlay before drawing the new
-   * technical header. The taller mask is important in enlarged study mode,
-   * where the inherited label font also scales up.
+   * V4 keeps that canvas untouched for compatibility, then masks that label
+   * zone on this overlay before drawing a single technical header.
    */
   ctx.fillStyle = "#ffffff";
   ctx.fillRect(rect.x - 4, maskTop, rect.size + 8, rect.y - maskTop + 1);
