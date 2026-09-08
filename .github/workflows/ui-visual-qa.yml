@@ -48,15 +48,10 @@ jobs:
           QA_BASE_URL: http://127.0.0.1:4173/
         run: node qa/visual-qa.mjs
 
-      - name: Run 1728px layout regression QA
+      - name: Run static Trazo V3 regression QA
         env:
           QA_BASE_URL: http://127.0.0.1:4173/
-        run: node qa/layout-regression.mjs
-
-      - name: Run senior Trazo workbench QA
-        env:
-          QA_BASE_URL: http://127.0.0.1:4173/
-        run: node qa/trace-workbench-qa.mjs
+        run: node qa/trace-static-v3-qa.mjs
 
       - name: Upload visual QA frames and report
         if: always()
