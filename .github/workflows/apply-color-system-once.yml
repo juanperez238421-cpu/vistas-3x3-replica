@@ -1,0 +1,67 @@
+name: Apply senior color system once
+
+on:
+  push:
+    branches:
+      - qa/diedric-ui-v2-20260908
+
+permissions:
+  contents: write
+
+jobs:
+  integrate-color-system:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          ref: qa/diedric-ui-v2-20260908
+          fetch-depth: 0
+
+      - name: Integrate color system
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          index = Path('index.html')
+          text = index.read_text(encoding='utf-8')
+          replacements = {
+              '<meta name="theme-color" content="#ffffff" />': '<meta name="theme-color" content="#eaf0f6" />',
+              '<link rel="stylesheet" href="./ui-enhancements.css" />': '<link rel="stylesheet" href="./ui-enhancements.css" />\n    <link rel="stylesheet" href="./ui-color-system.css" />',
+              'id="color-figure" type="color" value="#c7cdd3"': 'id="color-figure" type="color" value="#d8e0e8"',
+              'id="color-grid" type="color" value="#cbd3dc"': 'id="color-grid" type="color" value="#b9c7d6"',
+              'id="color-background" type="color" value="#fdfeff"': 'id="color-background" type="color" value="#f2f6fa"',
+              'id="color-accent" type="color" value="#1a2735"': 'id="color-accent" type="color" value="#2563eb"',
+              'id="color-face-paint" type="color" value="#b87333"': 'id="color-face-paint" type="color" value="#d97706"',
+          }
+          for old, new in replacements.items():
+              if old not in text:
+                  raise SystemExit(f'Expected index token not found: {old}')
+              text = text.replace(old, new, 1)
+          index.write_text(text, encoding='utf-8')
+
+          app = Path('app.js')
+          text = app.read_text(encoding='utf-8')
+          old_solution = '''const SOLUTION_VIEW_CONFIG = {\n  lateral: { preset: "right", color: "#B88A5E" },\n  alzado: { preset: "front", color: "#5B7DC8" },\n  planta: { preset: "top", color: "#5F8D76" },\n};'''
+          new_solution = '''const SOLUTION_VIEW_CONFIG = {\n  lateral: { preset: "right", color: "#D97706" },\n  alzado: { preset: "front", color: "#2563EB" },\n  planta: { preset: "top", color: "#0F8A70" },\n};'''
+          old_viewer = '''const VIEWER_DEFAULT_COLORS = {\n  figure: "#C7CDD3",\n  grid: "#CBD3DC",\n  background: "#FDFEFF",\n  accent: "#1A2735",\n  facePaint: "#B87333",\n};'''
+          new_viewer = '''const VIEWER_DEFAULT_COLORS = {\n  figure: "#D8E0E8",\n  grid: "#B9C7D6",\n  background: "#F2F6FA",\n  accent: "#2563EB",\n  facePaint: "#D97706",\n};'''
+          if old_solution not in text:
+              raise SystemExit('Expected solution palette not found')
+          if old_viewer not in text:
+              raise SystemExit('Expected viewer palette not found')
+          text = text.replace(old_solution, new_solution, 1).replace(old_viewer, new_viewer, 1)
+          app.write_text(text, encoding='utf-8')
+          PY
+
+      - name: Remove one-time workflow
+        run: rm .github/workflows/apply-color-system-once.yml
+
+      - name: Commit integrated senior palette
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html app.js .github/workflows/apply-color-system-once.yml
+          git commit -m "feat: integrate senior palette with viewer defaults"
+          git push origin HEAD:qa/diedric-ui-v2-20260908
