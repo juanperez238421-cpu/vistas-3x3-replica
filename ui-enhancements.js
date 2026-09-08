@@ -1,4 +1,4 @@
-import "./trace-workbench.js";
+import "./trace-workbench-v2.js";
 
 /* Progressive, non-destructive UI semantics for the existing Vistas 3x3 app. */
 
