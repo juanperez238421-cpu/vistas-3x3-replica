@@ -1,0 +1,492 @@
+/*
+ * Vistas 3x3 · Trazo Senior V4
+ * Compact normal workspace + dual Figure/Trace study zoom.
+ * Loaded after trace-workbench-v3.css as a surgical production override.
+ */
+
+/* ---------- Normal Trazo density ---------- */
+.board-panel .board-head {
+  gap: 7px;
+  margin-bottom: 8px;
+}
+
+.board-panel .trace-title-block {
+  gap: 2px;
+}
+
+.board-panel .trace-board-subtitle {
+  max-width: none;
+  font-size: 10px;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.board-panel .trace-toolbar-v3 {
+  gap: 6px;
+}
+
+.board-panel .trace-toolbar-group {
+  gap: 4px;
+  padding: 6px;
+}
+
+.board-panel .trace-group-label {
+  font-size: 8px;
+  letter-spacing: .12em;
+}
+
+.board-panel .trace-tool-grid-v3 {
+  gap: 5px;
+}
+
+.board-panel .trace-tool-grid-v3 .tool-button {
+  min-height: 42px;
+  padding: 5px 6px;
+  gap: 5px;
+}
+
+.board-panel .trace-tool-label {
+  font-size: 10px;
+  line-height: 1.08;
+}
+
+.board-panel .trace-tool-mark {
+  width: 14px;
+  min-width: 14px;
+  font-size: 10px;
+}
+
+.board-panel .trace-tool-mark-wide {
+  width: 22px;
+  min-width: 22px;
+  font-size: 7px;
+}
+
+.board-panel .trace-guide-row-v3 {
+  min-height: 24px;
+  padding: 4px 7px;
+  gap: 4px 10px;
+  font-size: 8px;
+  line-height: 1.15;
+}
+
+.board-panel .solution-controls {
+  grid-template-columns: minmax(112px, .72fr) minmax(0, 1.75fr);
+  gap: 5px 7px;
+  padding: 5px 6px;
+}
+
+.board-panel .trace-check-primary,
+.board-panel .trace-check-group .trace-check {
+  min-height: 36px;
+  padding: 4px 6px;
+  font-size: 9px;
+  line-height: 1.05;
+}
+
+.board-panel .trace-check-group {
+  gap: 4px;
+}
+
+/* The projection toggles already communicate the solution keys in normal mode. */
+.board-panel:not(.is-study-zoom-peer) .solution-legend {
+  display: none;
+}
+
+.board-panel #save-reference-image-inline {
+  display: none !important;
+}
+
+/* More sheet, less chrome. */
+.board-panel .paper-shell {
+  min-height: 0;
+}
+
+#paper-canvas {
+  z-index: 0;
+}
+
+#senior-grid-overlay {
+  z-index: 1;
+  background: transparent !important;
+  pointer-events: none !important;
+}
+
+#solution-canvas {
+  z-index: 2;
+  background: transparent !important;
+}
+
+.paper-shell[data-grid-mode="senior-3x3-v4"]::after {
+  content: "3×3 · AJUSTE ½ MÓDULO";
+  position: absolute;
+  right: 7px;
+  bottom: 6px;
+  z-index: 3;
+  padding: 3px 5px;
+  border: 1px solid rgba(17,17,17,.2);
+  background: rgba(255,255,255,.92);
+  color: #666;
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: .05em;
+  line-height: 1;
+  pointer-events: none;
+}
+
+/* Keep the old expanded-board rules dormant in V4. */
+.board-panel.is-expanded {
+  position: relative;
+  inset: auto;
+  z-index: auto;
+  width: auto !important;
+  height: auto !important;
+  max-width: none;
+  max-height: none;
+  padding: var(--panel-pad);
+  border: 1.5px solid var(--line);
+  overflow: hidden;
+}
+
+.board-panel.is-expanded::before {
+  display: none;
+}
+
+/* ---------- Figure + Trace study zoom ---------- */
+body.trace-study-zoom {
+  overflow: hidden !important;
+  background: #dcdcdc;
+}
+
+body.trace-study-zoom::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 899;
+  background: rgba(17,17,17,.55);
+  pointer-events: none;
+}
+
+.app-shell.is-study-zoom {
+  position: fixed;
+  inset: 10px;
+  z-index: 900;
+  width: auto !important;
+  height: auto !important;
+  max-height: none !important;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: minmax(430px, .9fr) minmax(560px, 1.1fr);
+  gap: 10px;
+  align-items: stretch;
+  overflow: hidden;
+  background: #e7e7e7;
+}
+
+.app-shell.is-study-zoom .library-panel {
+  display: none !important;
+}
+
+.app-shell.is-study-zoom .viewer-panel,
+.app-shell.is-study-zoom .board-panel {
+  min-width: 0;
+  min-height: 0;
+  width: auto;
+  height: 100%;
+  padding: 12px;
+  border: 1.5px solid #111;
+  background: #fff;
+  overflow: hidden;
+}
+
+.app-shell.is-study-zoom .viewer-panel {
+  grid-column: 1;
+}
+
+.app-shell.is-study-zoom .board-panel {
+  grid-column: 2;
+}
+
+.app-shell.is-study-zoom .viewer-head {
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.app-shell.is-study-zoom .viewer-head h1 {
+  font-size: clamp(26px, 2vw, 34px);
+}
+
+.app-shell.is-study-zoom .viewer-head .piece-meta {
+  margin-top: 5px;
+  font-size: 11px;
+}
+
+.app-shell.is-study-zoom .viewer-stage-shell {
+  min-height: 0;
+  height: 0;
+  flex: 1;
+}
+
+.app-shell.is-study-zoom .board-head {
+  display: grid;
+  grid-template-columns: minmax(155px, .34fr) minmax(0, 1.66fr);
+  grid-template-areas:
+    "title toolbar"
+    "guide guide"
+    "solution solution";
+  gap: 6px 10px;
+  align-items: start;
+  margin-bottom: 7px;
+}
+
+.app-shell.is-study-zoom .trace-title-block {
+  grid-area: title;
+  align-self: stretch;
+  align-content: start;
+  padding-right: 10px;
+  border-right: 1px solid #d0d0d0;
+}
+
+.app-shell.is-study-zoom .trace-title-block h2 {
+  font-size: clamp(28px, 2vw, 36px);
+}
+
+.app-shell.is-study-zoom .trace-board-subtitle {
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+  font-size: 9px;
+}
+
+.app-shell.is-study-zoom .trace-toolbar-v3 {
+  grid-area: toolbar;
+  gap: 6px;
+}
+
+.app-shell.is-study-zoom .trace-toolbar-group {
+  padding: 5px;
+}
+
+.app-shell.is-study-zoom .trace-tool-grid-v3 {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 4px;
+}
+
+.app-shell.is-study-zoom .trace-tool-grid-v3 .tool-button {
+  min-height: 40px;
+  padding: 4px 5px;
+}
+
+.app-shell.is-study-zoom .trace-tool-label {
+  font-size: 9px;
+}
+
+.app-shell.is-study-zoom .trace-tool-mark {
+  width: 12px;
+  min-width: 12px;
+  font-size: 9px;
+}
+
+.app-shell.is-study-zoom .trace-tool-mark-wide {
+  width: 19px;
+  min-width: 19px;
+  font-size: 6.5px;
+}
+
+.app-shell.is-study-zoom .trace-guide-row-v3 {
+  grid-area: guide;
+  min-height: 22px;
+  padding: 3px 6px;
+}
+
+.app-shell.is-study-zoom .trace-expanded-hint {
+  display: inline;
+  margin-left: auto;
+  color: #777;
+}
+
+.app-shell.is-study-zoom .solution-controls {
+  grid-area: solution;
+  grid-template-columns: minmax(120px, .7fr) minmax(0, 1.85fr);
+  gap: 5px 7px;
+  padding: 5px;
+}
+
+.app-shell.is-study-zoom .solution-legend {
+  display: flex;
+  grid-column: 1 / -1;
+  padding-top: 1px;
+  font-size: 8px;
+}
+
+.app-shell.is-study-zoom .paper-shell {
+  flex: 1;
+  min-height: 0;
+  height: 0;
+}
+
+/* ---------- Mid-size cleanup ---------- */
+@media (max-width: 1850px) {
+  .board-panel:not(.is-study-zoom-peer) .trace-board-subtitle {
+    font-size: 9px;
+  }
+
+  .board-panel:not(.is-study-zoom-peer) .trace-tool-grid-v3 .tool-button {
+    min-height: 40px;
+    padding-inline: 5px;
+  }
+
+  .board-panel:not(.is-study-zoom-peer) .trace-tool-label {
+    font-size: 9px;
+  }
+}
+
+@media (max-width: 1480px) {
+  .board-panel:not(.is-study-zoom-peer) .trace-board-subtitle {
+    display: none;
+  }
+
+  .board-panel:not(.is-study-zoom-peer) .trace-toolbar-v3 {
+    grid-template-columns: 1fr;
+    gap: 5px;
+  }
+
+  .board-panel:not(.is-study-zoom-peer) .trace-toolbar-group {
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: 5px;
+    padding: 4px 5px;
+  }
+
+  .board-panel:not(.is-study-zoom-peer) .trace-group-label {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-size: 7px;
+    letter-spacing: .08em;
+  }
+
+  .board-panel:not(.is-study-zoom-peer) .trace-tool-grid-v3 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 4px;
+  }
+
+  .board-panel:not(.is-study-zoom-peer) .trace-tool-grid-v3 .tool-button {
+    min-height: 38px;
+    padding: 4px 3px;
+  }
+
+  .board-panel:not(.is-study-zoom-peer) .trace-tool-mark {
+    display: none;
+  }
+
+  .board-panel:not(.is-study-zoom-peer) .trace-guide-row-v3 {
+    font-size: 7.5px;
+  }
+
+  .board-panel:not(.is-study-zoom-peer) .solution-controls {
+    grid-template-columns: minmax(105px, .72fr) minmax(0, 1.8fr);
+  }
+}
+
+/* Side-by-side study zoom remains useful down to tablet-landscape widths. */
+@media (max-width: 1120px) and (min-width: 901px) {
+  .app-shell.is-study-zoom {
+    grid-template-columns: minmax(360px, .82fr) minmax(480px, 1.18fr);
+  }
+
+  .app-shell.is-study-zoom .board-head {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "title"
+      "toolbar"
+      "guide"
+      "solution";
+    gap: 4px;
+  }
+
+  .app-shell.is-study-zoom .trace-title-block {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+    padding-right: 0;
+    padding-bottom: 4px;
+    border-right: 0;
+    border-bottom: 1px solid #d0d0d0;
+  }
+
+  .app-shell.is-study-zoom .trace-board-subtitle {
+    display: none;
+  }
+}
+
+/* Mobile: the study window becomes a vertically scrollable two-part studio. */
+@media (max-width: 900px) {
+  .app-shell.is-study-zoom {
+    inset: 0;
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(310px, 42vh) minmax(560px, auto);
+    gap: 6px;
+    overflow-y: auto;
+    background: #fff;
+  }
+
+  .app-shell.is-study-zoom .viewer-panel,
+  .app-shell.is-study-zoom .board-panel {
+    grid-column: 1;
+    height: auto;
+    min-height: 0;
+    padding: 9px;
+  }
+
+  .app-shell.is-study-zoom .viewer-panel {
+    grid-row: 1;
+  }
+
+  .app-shell.is-study-zoom .board-panel {
+    grid-row: 2;
+    min-height: 560px;
+  }
+
+  .app-shell.is-study-zoom .board-head {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "title"
+      "toolbar"
+      "guide"
+      "solution";
+  }
+
+  .app-shell.is-study-zoom .trace-title-block {
+    padding-right: 0;
+    padding-bottom: 4px;
+    border-right: 0;
+    border-bottom: 1px solid #d0d0d0;
+  }
+
+  .app-shell.is-study-zoom .trace-toolbar-v3 {
+    grid-template-columns: 1fr;
+  }
+
+  .app-shell.is-study-zoom .trace-tool-grid-v3 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .app-shell.is-study-zoom .trace-tool-mark {
+    display: none;
+  }
+
+  .app-shell.is-study-zoom .solution-legend {
+    display: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .app-shell.is-study-zoom .trace-tool-grid-v3,
+  .board-panel:not(.is-study-zoom-peer) .trace-tool-grid-v3 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
