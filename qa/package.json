@@ -1,0 +1,11 @@
+{
+  "name": "vistas-3x3-visual-qa",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "qa": "node visual-qa.mjs"
+  },
+  "devDependencies": {
+    "playwright": "1.55.0"
+  }
+}
