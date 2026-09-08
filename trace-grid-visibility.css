@@ -1,0 +1,16 @@
+/* Explicit paper-layer stack: drawing -> senior grid -> solution. */
+#paper-canvas {
+  z-index: 0;
+}
+
+#senior-grid-overlay {
+  z-index: 1 !important;
+  opacity: 1 !important;
+  background: transparent !important;
+  mix-blend-mode: multiply;
+}
+
+#solution-canvas {
+  z-index: 2 !important;
+  background: transparent !important;
+}
