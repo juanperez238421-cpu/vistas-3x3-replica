@@ -7,10 +7,11 @@
     <meta name="theme-color" content="#ffffff" />
     <title>Vistas 3x3 - Biblioteca</title>
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
-    <link rel="stylesheet" href="./styles.css?v=20260908-1137-v3" />
-    <link rel="stylesheet" href="./ui-enhancements.css?v=20260908-1137-v3" />
-    <link rel="stylesheet" href="./ui-color-system.css?v=20260908-1137-v3" />
-    <link rel="stylesheet" href="./trace-workbench-v3.css?v=20260908-1137-v3" />
+    <link rel="stylesheet" href="./styles.css?v=20260908-1200-v4" />
+    <link rel="stylesheet" href="./ui-enhancements.css?v=20260908-1200-v4" />
+    <link rel="stylesheet" href="./ui-color-system.css?v=20260908-1200-v4" />
+    <link rel="stylesheet" href="./trace-workbench-v3.css?v=20260908-1200-v4" />
+    <link rel="stylesheet" href="./trace-workbench-v4.css?v=20260908-1200-v4" />
     <script type="importmap">
       {
         "imports": {
@@ -166,14 +167,14 @@
         </div>
       </section>
 
-      <section class="board-panel panel" data-trace-version="3x3-senior-v3-static">
+      <section class="board-panel panel" data-trace-version="3x3-senior-v4-study-zoom">
         <header class="panel-head board-head">
           <div class="trace-title-block">
             <div>
               <p class="kicker">Panel de vistas</p>
               <h2>Trazo</h2>
             </div>
-            <p class="trace-board-subtitle">Lámina ortográfica 3×3 · dibuja Lateral, Alzado y Planta con ajuste técnico.</p>
+            <p class="trace-board-subtitle">Proyección ortográfica · 3×3 · ajuste ½ módulo.</p>
           </div>
 
           <div class="trace-toolbar-v3" aria-label="Herramientas de trazo">
@@ -207,8 +208,8 @@
                 <button id="save-reference-image" class="tool-button" type="button" aria-label="Exportar referencia 3D como PNG">
                   <span class="trace-tool-mark trace-tool-mark-wide" aria-hidden="true">REF</span><span class="trace-tool-label">PNG referencia</span>
                 </button>
-                <button id="toggle-board-expand" class="tool-button" type="button" aria-label="Ampliar panel de trazo" aria-expanded="false" aria-controls="paper-shell">
-                  <span class="trace-tool-mark" aria-hidden="true">⛶</span><span class="trace-tool-label">Ampliar trazo</span>
+                <button id="toggle-board-expand" class="tool-button" type="button" aria-label="Abrir modo estudio con figura 3D y trazo ampliados" aria-expanded="false" aria-controls="main-content">
+                  <span class="trace-tool-mark" aria-hidden="true">⛶</span><span class="trace-tool-label">Zoom figura + trazo</span>
                 </button>
               </div>
             </section>
@@ -218,7 +219,7 @@
             <span class="trace-guide-chip"><strong>Retícula:</strong> 3×3</span>
             <span class="trace-guide-chip"><strong>Ajuste:</strong> ½ módulo</span>
             <span class="trace-guide-chip"><strong>Segmento:</strong> clic inicial + clic final</span>
-            <span class="trace-expanded-hint">Esc para volver al panel normal</span>
+            <span class="trace-expanded-hint">Esc para salir del modo estudio</span>
           </div>
 
           <div class="solution-controls" aria-label="Ayudas de solución">
@@ -243,18 +244,18 @@
           </div>
         </header>
 
-        <div id="paper-shell" class="paper-shell" data-grid-mode="senior-3x3" data-snap-mode="half-module">
+        <div id="paper-shell" class="paper-shell" data-grid-mode="senior-3x3-v4" data-snap-mode="half-module">
           <div class="paper-stack">
             <canvas id="paper-canvas" class="paper-canvas" aria-label="Panel de vistas"></canvas>
-            <canvas id="senior-grid-overlay" class="paper-canvas" aria-hidden="true" data-grid-definition="3x3-major-6-snap" data-projection-grids="3"></canvas>
+            <canvas id="senior-grid-overlay" class="paper-canvas" aria-hidden="true" data-grid-definition="3x3-v4-study" data-projection-grids="3" data-header-labels="4"></canvas>
             <canvas id="solution-canvas" class="paper-canvas paper-solution-canvas" aria-hidden="true"></canvas>
           </div>
         </div>
       </section>
     </main>
 
-    <script type="module" src="./app.js?v=20260908-1137-v3"></script>
-    <script type="module" src="./trace-workbench-v3.js?v=20260908-1137-v3"></script>
-    <script type="module" src="./ui-enhancements-v3.js?v=20260908-1137-v3"></script>
+    <script type="module" src="./app.js?v=20260908-1200-v4"></script>
+    <script type="module" src="./trace-workbench-v4.js?v=20260908-1200-v4"></script>
+    <script type="module" src="./ui-enhancements-v3.js?v=20260908-1200-v4"></script>
   </body>
 </html>
